@@ -1,0 +1,323 @@
+NATART Backend - Complete Project Structure
+=============================================
+
+natart-backend/
+│
+├── 📄 server.js                    # Main server entry point
+├── 📄 package.json                 # Dependencies and scripts
+├── 📄 package-lock.json            # Locked dependencies
+├── 📄 .env                         # Environment variables (CHANGE BEFORE USE)
+├── 📄 .gitignore                   # Git ignore patterns
+│
+├── 📁 models/                      # Database Models (MongoDB Schemas)
+│   ├── User.js                     # User schema - authentication & profiles
+│   ├── Product.js                  # Product schema - store items
+│   ├── Order.js                    # Order schema - customer orders
+│   ├── ChatMessage.js              # ChatMessage schema - messages
+│   └── Conversation.js             # Conversation schema - chat threads
+│
+├── 📁 routes/                      # API Route Handlers
+│   ├── auth.js                     # Authentication endpoints (/api/auth)
+│   │   - POST /signup              - Register user
+│   │   - POST /login               - Login user
+│   │   - GET /me                   - Get current user
+│   │   - PUT /profile              - Update profile
+│   │   - POST /change-password     - Change password
+│   │
+│   ├── products.js                 # Product endpoints (/api/products)
+│   │   - GET /                     - Get all products
+│   │   - GET /:id                  - Get single product
+│   │   - POST /                    - Create (Admin)
+│   │   - PUT /:id                  - Update (Admin)
+│   │   - DELETE /:id               - Delete (Admin)
+│   │
+│   ├── orders.js                   # Order endpoints (/api/orders)
+│   │   - POST /                    - Create order
+│   │   - GET /user                 - Get user orders
+│   │   - GET /detail/:id           - Get order detail
+│   │   - GET /                     - Get all (Admin)
+│   │   - PUT /:id/status           - Update status (Admin)
+│   │   - PUT /:id/payment          - Update payment (Admin)
+│   │
+│   ├── chat.js                     # Chat endpoints (/api/chat)
+│   │   - POST /conversation        - Create conversation
+│   │   - POST /message             - Send message
+│   │   - GET /messages/:convId     - Get messages
+│   │   - POST /reply               - Admin reply
+│   │   - PUT /:convId/read         - Mark as read
+│   │
+│   └── admin.js                    # Admin endpoints (/api/admin)
+│       - GET /dashboard            - Dashboard stats
+│       - GET /users                - All users
+│       - PUT /users/:id/deactivate - Deactivate user
+│       - GET /conversations        - All conversations
+│       - GET /orders/analysis/*    - Analytics
+│
+├── 📁 middleware/                  # Custom Middleware
+│   └── auth.js                     # JWT authentication middleware
+│       - auth function             - Check token validity
+│       - adminAuth function        - Check admin role
+│
+├── 📁 uploads/                     # File Storage
+│   └── products/                   # Product image files (created on upload)
+│
+├── 📁 node_modules/                # Installed npm packages (auto-created)
+│
+├── 📄 README.md                    # Complete API documentation
+├── 📄 QUICK_START.md               # Quick start guide with examples
+├── 📄 FRONTEND_INTEGRATION.js      # Frontend helper functions
+└── 📄 create-admin.js (optional)   # Script to create admin user
+
+═══════════════════════════════════════════════════════════════════════
+
+FILE DESCRIPTIONS
+═════════════════
+
+KEY FILES YOU NEED TO USE:
+──────────────────────────
+
+1. .env
+   - Configuration file with environment variables
+   - Change BEFORE running the server
+   - Format: KEY=VALUE
+   - Keep this file SECRET - never commit to git
+
+2. server.js
+   - Main entry point of the application
+   - Starts Express server
+   - Configures Socket.io
+   - Connects to MongoDB
+   - Run with: npm start
+
+3. package.json
+   - Lists all dependencies
+   - Defines scripts (npm start, npm run dev)
+   - Run: npm install (only once)
+
+4. models/
+   - Define database structure
+   - Each model is a MongoDB collection
+   - User.js, Product.js, Order.js, ChatMessage.js, Conversation.js
+
+5. routes/
+   - API endpoints
+   - Handle HTTP requests
+   - Connect to models for data operations
+   - Use auth middleware for protected routes
+
+6. middleware/auth.js
+   - JWT token validation
+   - Protects admin-only routes
+   - Extracts user info from token
+
+═══════════════════════════════════════════════════════════════════════
+
+INSTALLATION STEPS
+══════════════════
+
+1. Install dependencies:
+   npm install
+
+2. Create/Edit .env file with:
+   PORT=5000
+   MONGODB_URI=mongodb://localhost:27017/natart
+   JWT_SECRET=your_secret_key
+   FRONTEND_URL=http://localhost:3000
+   NODE_ENV=development
+
+3. Make sure MongoDB is running:
+   mongod
+
+4. Start the server:
+   npm start
+
+5. Visit: http://localhost:5000
+   You should see: {"message":"NATART Backend API is running"}
+
+═══════════════════════════════════════════════════════════════════════
+
+API ENDPOINTS SUMMARY
+═════════════════════
+
+AUTHENTICATION
+  POST   /api/auth/signup            → Create new account
+  POST   /api/auth/login             → Login with email/password
+  GET    /api/auth/me                → Get current user info
+  PUT    /api/auth/profile           → Update user profile
+  POST   /api/auth/change-password   → Change password
+
+PRODUCTS
+  GET    /api/products               → Get all products
+  GET    /api/products/:id           → Get single product
+  POST   /api/products               → Add new product (Admin)
+  PUT    /api/products/:id           → Update product (Admin)
+  DELETE /api/products/:id           → Delete product (Admin)
+
+ORDERS
+  POST   /api/orders                 → Create order
+  GET    /api/orders/user            → Get my orders
+  GET    /api/orders                 → Get all orders (Admin)
+  PUT    /api/orders/:id/status      → Update order status (Admin)
+
+CHAT
+  POST   /api/chat/conversation      → Create chat conversation
+  POST   /api/chat/message           → Send message
+  GET    /api/chat/messages/:convId  → Get conversation
+  POST   /api/chat/reply             → Admin reply
+  GET    /api/chat/conversations     → Get all conversations (Admin)
+
+ADMIN
+  GET    /api/admin/dashboard        → Dashboard stats
+  GET    /api/admin/users            → List users
+  GET    /api/admin/conversations    → Manage chats
+
+═══════════════════════════════════════════════════════════════════════
+
+ENVIRONMENT VARIABLES
+═════════════════════
+
+PORT                    Server port (default: 5000)
+MONGODB_URI            Database connection string
+JWT_SECRET             Secret key for token signing (CHANGE!)
+FRONTEND_URL           Frontend domain for CORS
+NODE_ENV               development / production
+
+═══════════════════════════════════════════════════════════════════════
+
+TESTING THE API
+═══════════════
+
+Using cURL:
+-----------
+
+Sign up:
+curl -X POST http://localhost:5000/api/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John","email":"john@example.com","phone":"+995577604756","password":"pass123","confirmPassword":"pass123"}'
+
+Login:
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"john@example.com","password":"pass123"}'
+
+Get products:
+curl http://localhost:5000/api/products
+
+Using Postman:
+--------------
+1. Download from https://www.postman.com/downloads/
+2. Create new request
+3. Set method and URL
+4. Fill in headers and body
+5. Click Send
+
+═══════════════════════════════════════════════════════════════════════
+
+SECURITY FEATURES
+═════════════════
+
+✅ JWT Authentication      - Token-based secure login
+✅ Password Hashing        - Passwords encrypted with bcryptjs
+✅ Role-based Access       - User vs Admin permissions
+✅ CORS Protection         - Control cross-origin requests
+✅ Input Validation        - Validate all user inputs
+✅ Error Handling          - Safe error messages
+✅ Admin-only Routes       - Protect sensitive operations
+
+═══════════════════════════════════════════════════════════════════════
+
+DEPLOYMENT OPTIONS
+══════════════════
+
+Heroku (Easiest)
+  npm install -g heroku
+  heroku create natart-api
+  git push heroku main
+
+AWS EC2
+  1. Launch Ubuntu instance
+  2. Install Node.js & MongoDB
+  3. Clone repository
+  4. npm install
+  5. Configure .env
+  6. Start with PM2
+
+DigitalOcean
+  Similar to AWS but with easier setup
+  Use their App Platform for one-click deployment
+
+═══════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+═══════════════
+
+MongoDB Connection Error?
+  → Make sure MongoDB is running (mongod)
+  → Check connection string in .env
+  → Verify MongoDB credentials
+
+Port Already in Use?
+  → Change PORT in .env
+  → Or kill process: lsof -i :5000 then kill -9 PID
+
+Token Invalid?
+  → Token might be expired (7 days)
+  → Check JWT_SECRET is correct
+  → Re-login to get new token
+
+CORS Error?
+  → Update FRONTEND_URL in .env
+  → Use correct frontend URL/port
+
+═══════════════════════════════════════════════════════════════════════
+
+DOCUMENTATION FILES
+═══════════════════
+
+README.md
+  - Full API documentation
+  - All endpoints explained
+  - Request/response examples
+  - Database models
+
+QUICK_START.md
+  - Beginner-friendly guide
+  - Testing examples
+  - Frontend integration
+  - Screenshots
+
+INSTALLATION_GUIDE.md
+  - Step-by-step setup
+  - Troubleshooting
+  - Deployment guide
+  - Security checklist
+
+FRONTEND_INTEGRATION.js
+  - Ready-to-use API functions
+  - Copy to your frontend
+  - Simplifies API calls
+
+═══════════════════════════════════════════════════════════════════════
+
+NEXT STEPS
+══════════
+
+1. ✅ Setup Backend (Done!)
+2. ⬜ Install dependencies: npm install
+3. ⬜ Configure .env file
+4. ⬜ Start server: npm start
+5. ⬜ Test with cURL or Postman
+6. ⬜ Connect frontend to API
+7. ⬜ Build admin panel
+8. ⬜ Deploy to production
+
+═══════════════════════════════════════════════════════════════════════
+
+CONTACT & SUPPORT
+═════════════════
+
+Email: natart2026@outlook.com
+Phone: +995 577 604 756
+Location: Tbilisi, Georgia
+
+═══════════════════════════════════════════════════════════════════════
